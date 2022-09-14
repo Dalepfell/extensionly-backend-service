@@ -1,5 +1,5 @@
 import cookie from '@fastify/cookie';
-import { VersioningType } from '@nestjs/common';
+import { Logger, VersioningType } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
@@ -9,6 +9,9 @@ import { PrismaService } from './common/prisma/prisma.service';
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(AppModule, new FastifyAdapter());
   const configService = app.get(ConfigService);
+  const port = configService.get<number>('PORT', 3000);
+  const logger = app.get(Logger);
+  logger.debug(`Starting on port ${port}...`);
 
   // @ts-expect-error TypeScript is complainig, but this is how it's supposed to be, according to docs:
   // https://docs.nestjs.com/techniques/cookies#use-with-fastify
@@ -24,6 +27,6 @@ async function bootstrap() {
   const prismaService = app.get(PrismaService);
   prismaService.enableShutdownHooks(app);
 
-  await app.listen(configService.get<string>('PORT', '3000'));
+  await app.listen(port);
 }
 void bootstrap();

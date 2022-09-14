@@ -19,7 +19,7 @@ import * as Joi from 'joi';
         ACCESS_TOKEN_SECRET: Joi.string().required(),
         REFRESH_TOKEN_SECRET: Joi.string().required(),
         COOKIE_SIGNING_SECRET: Joi.string().required(),
-        PORT: Joi.string().default('3000'),
+        PORT: Joi.number(),
       }),
     }),
     I18nModule.forRoot({
